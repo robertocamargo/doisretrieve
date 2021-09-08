@@ -3,6 +3,7 @@ import api from './api'
 import {columns,options} from "./tableOptions";
 import MUIDataTable from "mui-datatables";
 import InputMask from 'react-input-mask';
+import ReactLoading from 'react-loading';
 
 import "./styles.css";
 
@@ -11,6 +12,7 @@ export default function App() {
 
   const [values, setValues] = useState('');
   const [data, setData] = useState([]);
+  const [loading,setLoading] = useState(false);
 
   let total;
 
@@ -23,16 +25,15 @@ export default function App() {
 
   async function getDois(cur,dois=[]){
     const {prefix,from,to}  = values;
-    console.log(prefix);
     if(!prefix || !from || !to){
       return;
     } 
   
    return await api.get(`works?filter=prefix:${prefix},type:journal-article,from-created-date:${from},until-created-date:${to}&select=type,DOI,title,container-title,link,created,URL,member,publisher`+(cur ? '&cursor='+cur : '')) 
       .then(response => {
-        
+     
       if(cur === '*') {
-            total = response.data.message.['total-results']
+            total = response.data.message['total-results'];
          }
             dois.push(...response.data['message']['items'])
             total = total - response.data['message']['items'].length
@@ -43,6 +44,7 @@ export default function App() {
             cur = encodeURIComponent(response.data['message']['next-cursor'])
             return getDois(cur, dois)
           })
+         
   }
 
 
@@ -50,14 +52,15 @@ export default function App() {
     ev.preventDefault();
     setData([]);
     getDois("*");
+    setLoading(false); 
+    
   }
 
 
 let newData = data.map(dois => {
   return {
       "DOI": dois.DOI,
-      "link":dois.link[0].URL,
-      "created":dois.created.['date-time'],
+      "created":dois.created['date-time'],
       "title":dois.title,
       "type":dois.type,
       "URL":dois.URL,
@@ -70,7 +73,7 @@ let newData = data.map(dois => {
 
   return (
     <div className="App">
-      <h1>DOIs retrieve</h1>
+      <h1>DOIs retrieve {loading}</h1>
       <form onSubmit={onSubmit}>
         <div className="search">
           <InputMask  id="prefix" size="8" mask='10.99999' name="prefix" onChange={onChange} placeholder="prefix" type="text" />
@@ -79,6 +82,9 @@ let newData = data.map(dois => {
           <button type="submit" className="myButton">Search</button>
         </div>
       </form>
+      <div className="loading">
+        {loading ? <ReactLoading type={"spin"} color="#00000" height={'3%'} width={'3%'} />:''}
+      </div>
       <MUIDataTable
         title={"DOI List"}
         data={newData}

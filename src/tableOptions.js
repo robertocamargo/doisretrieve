@@ -21,6 +21,11 @@ export const columns = [
         options: {
         filter: true,
         sort: true,
+        customBodyRender: (value, tableMeta, updateValue) => {
+          return (
+            <div>{(value[0].length > 35) ? value[0].substr(0, 35) + '...': value}</div>
+          );
+      }
         }
       },
       {
@@ -29,18 +34,13 @@ export const columns = [
         options: {
         filter: true,
         sort: true,
+        customBodyRender: (value, tableMeta, updateValue) => {
+            return (
+              <div>{value}</div>
+            );
         }
-      },
-      {
-        name: "link",
-        label: "Link",
-        options: {
-        filter: true,
-        sort: true,
-        display:false,
-        }
-      },
-
+      }
+      }
     ];
 
 export const options = {

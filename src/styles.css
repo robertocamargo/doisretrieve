@@ -10,10 +10,16 @@
 .search {
   display: flex;
   justify-content: center;  
-  margin: 50px;
+  margin: 10px;
 }
 input{
   margin-right: 10px;
+}
+
+.loading{
+	display: flex;
+	justify-content: center;  
+	margin-bottom: 5px;
 }
 
 .myButton {
