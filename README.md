@@ -1,5 +1,13 @@
 # DOIs Retrieve
-This APP retrieves the journal DOIs by prefix and period
+This APP retrieves the journal DOIs by prefix and period.
+
+# Features
+<ul>
+<li>Browse by title</li>
+<li>Download csv file</li>
+<li>print DOI list </li>
+</ul>
+
 
 # Technologies
 <ul>

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import api from './api'
 import {columns,options} from "./tableOptions";
 import MUIDataTable from "mui-datatables";
-import InputMask from 'react-input-mask';
 import ReactLoading from 'react-loading';
 
 import "./styles.css";
@@ -20,7 +19,6 @@ export default function App() {
   function onChange(ev){
     const {name, value} = ev.target;
     setValues({...values,[name]:value});
-
 }
 
   async function getDois(cur,dois=[]){
@@ -38,13 +36,13 @@ export default function App() {
             dois.push(...response.data['message']['items'])
             total = total - response.data['message']['items'].length
             if(total <= 0){
+              setLoading(false);
               setData(dois);
               return dois
               } 
             cur = encodeURIComponent(response.data['message']['next-cursor'])
             return getDois(cur, dois)
           })
-         
   }
 
 
@@ -52,7 +50,7 @@ export default function App() {
     ev.preventDefault();
     setData([]);
     getDois("*");
-    setLoading(false); 
+    setLoading(true); 
     
   }
 
@@ -73,24 +71,24 @@ let newData = data.map(dois => {
 
   return (
     <div className="App">
-      <h1>DOIs retrieve {loading}</h1>
+      <h1>Retrieve DOIs by prefix </h1>
       <form onSubmit={onSubmit}>
         <div className="search">
-          <InputMask  id="prefix" size="8" mask='10.99999' name="prefix" onChange={onChange} placeholder="prefix" type="text" />
+          <input id="prefix" size="8" name="prefix" onChange={onChange} placeholder="10.xxxx" type="text" />
           <input id="from" size="8" name="from" onChange={onChange} placeholder="2020-12-01" type="text" />
-          <input id="to" size="8" name="to" onChange={onChange} placeholder="2020-12-31" type="text" /> 
-          <button type="submit" className="myButton">Search</button>
+          <input id="to" size="8" name="to" onChange={onChange} placeholder="2020-12-31" type="text" />  
+           <button type="submit" className="myButton">Search</button> 
         </div>
       </form>
       <div className="loading">
         {loading ? <ReactLoading type={"spin"} color="#00000" height={'3%'} width={'3%'} />:''}
       </div>
-      <MUIDataTable
+       <MUIDataTable
         title={"DOI List"}
         data={newData}
         columns={columns}
         options={options}
-      />
+      /> 
     </div>
   );
 }
