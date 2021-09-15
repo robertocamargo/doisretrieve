@@ -5,7 +5,7 @@ This APP retrieves the journal DOIs by prefix and period.
 <ul>
 <li>Browse by title</li>
 <li>Download csv file</li>
-<li>print DOI list </li>
+<li>Print DOI list </li>
 </ul>
 
 
